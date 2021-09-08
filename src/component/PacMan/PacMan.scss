@@ -1,0 +1,106 @@
+.pacman {
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    background: #F2D648;
+    position: relative;
+    // animation-name: moveright;
+    animation-duration: 0.2s;
+    // animation-iteration-count: infinite;
+    
+    &--down{
+      animation-name: movedown;
+      transform:  rotate(90deg);
+      
+    }
+    &--up{
+      animation-name: moveup;
+      transform:  rotate(-90deg);
+    }
+    &--left{
+      animation-name: moveleft;
+      transform:rotateY(180deg);
+    }
+
+    &--right{
+      animation-name: moveright;
+      transform:rotateY(0deg);
+    }
+    &__eye {
+      position: absolute;
+        width: 1.5px;
+        height: 1.5px;
+        border-radius: 50%;
+        top: 15%;
+        right: 25%;
+        background: #333333;
+    }
+    
+    &__mouth {
+      background: #30385a;
+      position: absolute;
+      width: 105%;
+      height: 100%;
+      clip-path: polygon(100% 74%, 44% 48%, 100% 21%);
+      animation-name: eat;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+    }
+}
+
+
+  
+@keyframes eat {
+    0% {
+      clip-path: polygon(105% 74%, 44% 48%, 105% 21%);
+    }
+
+    25% {
+      clip-path: polygon(105% 60%, 44% 48%, 105% 40%);
+    }
+    
+    50% {
+      clip-path: polygon(105% 50%, 44% 48%, 105% 50%);
+    }
+    
+    75% {
+     clip-path: polygon(105% 59%, 44% 48%, 105% 30%);
+    }
+    
+    100% {
+     clip-path: polygon(105% 74%, 44% 48%, 105% 21%);
+    }
+}
+
+@keyframes moveright{
+  0% {
+    transform: translate(-100%,0%) rotateY(0deg);
+  }
+  100% {
+    transform: translate(0%,0%) rotateY(0deg);
+  }
+}
+@keyframes movedown{
+  0% {
+    transform: translate(0%,-100%) rotate(90deg);
+  }
+  100% {
+    transform: translate(0%,0%) rotate(90deg);
+  }
+}
+@keyframes moveleft{
+  0% {
+    transform: translate(100%,0%) rotateY(180deg);
+  }
+  100% {
+    transform: translate(0%,0%) rotateY(180deg);
+  }
+}
+@keyframes moveup{
+  0% {
+    transform: translate(0%,100%) rotate(-90deg);
+  }
+  100% {
+    transform: translate(0%,0%) rotate(-90deg);
+  }
+}

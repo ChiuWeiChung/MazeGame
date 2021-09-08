@@ -1,0 +1,125 @@
+.gameboard{
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1 1;
+    margin: .5rem auto;
+
+    &__playground{
+        width: 25rem;
+        height: 25rem;
+        position: relative;
+        box-shadow: 0 2rem 4rem #00000030;
+    
+        &__maze{
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            background-color: #30385a;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+        }
+    
+        &--easy{
+            width: 12.5%;
+            height: 12.5%;
+        }
+        &--normal{
+            width: 10%;
+            height: 10%;
+        }
+        &--hard{
+            width: 5%;
+            height: 5%;
+        }
+        
+        .vertex{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border:1px solid #f7f7f7;
+        }
+    
+        .top{
+            border-top: 0px ;
+        }
+        .bottom{
+            border-bottom: 0px ;
+        }
+        .right{
+            border-right: 0px ;
+        }
+        .left{
+            border-left: 0px ;
+        }
+
+        .target{
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .target::after{
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+            background-color: orangered;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+    }
+    
+    &__console{
+        width: 25rem;
+        height: 25rem;
+        display: flex;
+        flex-direction: column;
+
+        .toggler{
+            display: none;
+            @media(max-width:890px){
+                display: block;
+                width: 100%;
+                background: black;
+                margin: .5rem 0;
+                border-radius: 5px;
+            }
+        }
+
+        &__info{
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            transition: .5s all;
+            .calculator{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;  
+                flex:1;
+            }
+        }
+
+
+
+        @media(max-width:890px){
+            .hide {
+                opacity:0 ;
+                visibility: hidden;
+                height: 0px;
+            }
+        }
+
+
+    }
+
+}
+
+
+
