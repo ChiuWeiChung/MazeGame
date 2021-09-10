@@ -3,18 +3,20 @@ interface List {
   [key: number]: number[];
 }
 interface Answer {
-  [key: string]: number;
+  [key: string]: number
 }
 
 class Graph {
   adjacentList: List = {};
   visited: number[] = [];
-  answer:Answer={}
+  answer: Answer = {};
+  solutionPath: number[] = []
 
   constructor(public size: number) {
     for (let i = 1; i <= this.size ** 2; i++) {
       this.addVertex(i);
     }
+    this.createMaze();
   }
 
   addVertex(vertex: number): void {
@@ -32,28 +34,56 @@ class Graph {
 
   depthFirstRecursive(start: number) {
     let visitedObj: { [key: number]: boolean } = {};
-    let result: number[] = [];
+    let path: number[] = [];
+    let finalPath: number[] = [];
     let max = -Infinity;
-    let finalVertex ;
-    const dfs = (vertex: number,count:number) => {
+    let finalVertex: number | undefined;
+    const dfs = (vertex: number, count: number, pth: number[]) => {
       visitedObj[vertex] = true;
-      result.push(vertex);
-      if(count+1>max) {
-        max = count+1;
-        finalVertex = vertex
+      let newPath = [...pth, vertex];
+      if (count + 1 > max) {
+        max = count + 1;
+        finalVertex = vertex;
+        finalPath = newPath
       }
       this.adjacentList[vertex].forEach(el => {
-        if (!visitedObj[el]) return dfs(el,count+1)
+        if (!visitedObj[el]) return dfs(el, count + 1, newPath)
       })
     }
-    dfs(start,0);
-    // console.log(`max:${max} finalVertex:${finalVertex}`);
-    if(finalVertex){
-      this.answer = {start:0,end:finalVertex,count:max-1}
+    dfs(start, 0, path);
+
+    if (finalVertex) {
+      this.answer = { end: finalVertex, count: max - 1, }
+      this.solutionPath = finalPath
     }
-    // console.log(result);
-    // return result;
+
+
   }
+  // depthFirstRecursive(start: number) {
+  //   let visitedObj: { [key: number]: boolean } = {};
+  //   let path: number[] = [];
+  //   let finalPath :number[]=[];
+  //   let max = -Infinity;
+  //   let finalVertex:number|undefined ;
+  //   const dfs = (vertex: number,count:number) => {
+  //     visitedObj[vertex] = true;
+
+  //     path.push(vertex);
+  //     if(count+1>max) {
+  //       max = count+1;
+  //       finalVertex = vertex;
+  //     }
+  //     this.adjacentList[vertex].forEach(el => {
+  //       if (!visitedObj[el]) return dfs(el,count+1)
+  //     })
+  //   }
+  //   dfs(start,0);
+
+  //   if(finalVertex){
+  //     this.answer = {start:0,end:finalVertex,count:max-1}
+  //   }
+
+  // }
 
   createPath(key: number): void {
     const path = [key];
@@ -73,7 +103,6 @@ class Graph {
               this.addEdge(path[0], path[0] - 1)
             }
           } else {
-
             this.addEdge(path[0], path[0] - this.size)
           }
           keepgoing = false;
@@ -95,7 +124,6 @@ class Graph {
     const newDirection = allDirection.filter((el) => {
       return !arr.includes(el);
     });
-
     // If Dead Road => return false
     if (newDirection.length === 0) return 0;
     // If Live Road => return random vertex

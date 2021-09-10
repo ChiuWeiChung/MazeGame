@@ -1,83 +1,79 @@
 import React from 'react';
-import Graph from '../Graph/Graph';
 import './GameBoard.scss';
 
 import Modal from '../Modal/modal';
-import ModeSelector from '../modeSelector/modeSelector';
-import Controller from '../Controller/controller';
 import PacMan from '../PacMan/PacMan';
-import Calculator from '../Calculator/calculator';
+import GameConsole from '../GameConsole/GameConsole';
+
+import { connect } from 'react-redux';
+import { StoreState } from '../../store/reducers/index';
+import { Maze, renderRunner, refresh } from '../../store/actions/index';
 
 interface GameBoardProps {
     mode: { level: string, size: number };
     modeClicker: (level: string, size: number) => void;
+    // ========Redux========
+    renderRunner: Function;
+    refresh: Function;
+    maze: Maze
 }
 
-interface GameBoardState {
-    graph: Graph;
-    position: number;
-    pacManForward: string;
-    infoIsToggle: boolean;
-}
-
-
-class GameBoard extends React.Component<GameBoardProps, GameBoardState>{
-
-    state = {
-        graph: new Graph(this.props.mode.size),
-        position: 1,
-        pacManForward: 'right',
-        infoIsToggle: true,
-    }
+class GameBoard extends React.Component<GameBoardProps, {}>{
 
     componentDidMount() {
-        document.querySelector('body')?.addEventListener('keydown', this.keyController);
-    }
-
-    keyController = (e: KeyboardEvent) => {
-        switch (e.code) {
-            case ('ArrowLeft'):
-                return this.renderRunner(-1, 'left');
-            case ('ArrowRight'):
-                return this.renderRunner(1, 'right');
-            case ('ArrowDown'):
-                return this.renderRunner(this.props.mode.size, 'down');
-            case ('ArrowUp'):
-                return this.renderRunner(-this.props.mode.size, 'up');
-            default:
-                return
-        }
+        document.querySelector('body')?.addEventListener('keydown', this.keydownListener);
     }
 
     componentDidUpdate(prevProps: GameBoardProps) {
-        if (prevProps.mode.level !== this.props.mode.level) {
-            this.initGame();
+        if (prevProps.mode.level !== this.props.mode.level) this.initGame();
+        if (this.props.maze.position === this.props.maze.graph.answer.end) {
+            document.querySelector('body')?.removeEventListener('keydown', this.keydownListener)
         }
     }
 
-    renderPac = (blockLocation: number): JSX.Element | null => {
-        if (blockLocation + 1 === this.state.position) {
-            return (
-                <PacMan direction={this.state.pacManForward} currentPosition={this.state.position} destination={this.state.graph.answer.end} />
-            )
-        } else if (blockLocation + 1 === this.state.graph.answer.end && (this.state.graph.answer.end !== this.state.position)) {
-            return (
-                <div className="target"></div>
-            )
+    keydownListener = (e: KeyboardEvent): void => {
+        let currentPosition = this.props.maze.position;
+        let nextPosition = this.props.maze.graph.adjacentList[currentPosition];
+        switch (e.code) {
+            case ('ArrowLeft'):
+                this.props.renderRunner(-1, 'left', currentPosition, nextPosition,this.props.maze.step);
+                break
+            case ('ArrowRight'):
+                this.props.renderRunner(1, 'right', currentPosition, nextPosition,this.props.maze.step);
+                break
+            case ('ArrowDown'):
+                this.props.renderRunner(this.props.mode.size, 'down', currentPosition, nextPosition,this.props.maze.step);
+                break
+            case ('ArrowUp'):
+                this.props.renderRunner(-this.props.mode.size, 'up', currentPosition, nextPosition,this.props.maze.step);
+                break
+        }
+    }
+    renderPacAndTarget = (blockLocation: number): JSX.Element | null => {
+        if (blockLocation === this.props.maze.position) {
+            return <PacMan maze={this.props.maze} />
+        } else if (blockLocation === this.props.maze.graph.answer.end && (this.props.maze.graph.answer.end !== this.props.maze.position)) {
+            return <div className="target"></div>
         }
         return null
     }
 
     renderMaze = (): JSX.Element[] => {
         let arr = [];
-        this.state.graph.createMaze();
-        for (let key in this.state.graph.adjacentList) {
-            arr.push(this.renderWall(key, this.state.graph.adjacentList[key]))
+        for (let key in this.props.maze.graph.adjacentList) {
+            arr.push(this.renderWall(key, this.props.maze.graph.adjacentList[key]))
         }
         return arr.map((el, index) => {
+            let show =null;
+            if(this.props.maze.showHint){
+                show = this.props.maze.graph.solutionPath.includes(index+1)?true:false
+            }
             return (
-                <div key={index + 1} className={`gameboard__playground--${this.props.mode.level} vertex ${el.join(' ')}`}>
-                    {this.renderPac(index)}
+                <div 
+                key={index + 1}  
+                className={`${this.props.mode.level} ${show?'hint':''} vertex ${el.join(' ')}`}
+                >
+                    {this.renderPacAndTarget(index + 1)}
                 </div>
             )
         })
@@ -94,79 +90,39 @@ class GameBoard extends React.Component<GameBoardProps, GameBoardState>{
         return directions
     }
 
-    // goto redux
-    renderRunner = (nextStep: number, direction: string): void => {
-        let currentPosition = this.state.position;
-        let nextPosition = this.state.graph.adjacentList[currentPosition];
-        if (!nextPosition.includes(currentPosition + nextStep)) return
-        this.setState({ position: (currentPosition + nextStep), pacManForward: direction });
-        if (this.state.position === this.state.graph.answer.end) {
-            document.querySelector('body')?.removeEventListener('keydown', this.keyController)
-        }
-    }
-
-
-    //goto redux
     initGame = (): void => {
-        this.setState({
-            graph: new Graph(this.props.mode.size),
-            position: 1,
-            pacManForward: 'right'
-        })
-        document.querySelector('body')?.addEventListener('keydown', this.keyController);
-    }
-    
-    //goto redux
-    infoToggler = () => {
-        this.setState((prevState) => {
-            return {
-                infoIsToggle: !prevState.infoIsToggle
-            }
-        })
+        this.props.refresh(this.props.mode.size);
+        document.querySelector('body')?.addEventListener('keydown', this.keydownListener);
     }
 
     render() {
+        // console.log(this.props.maze.showHint)
         return (
-
             <div className='gameboard'>
                 <div className="gameboard__playground">
                     <Modal
-                        currentPosition={this.state.position}
-                        end={this.state.graph.answer.end}
+                        currentPosition={this.props.maze.position}
+                        end={this.props.maze.graph.answer.end}
                         restart={this.initGame}
                     />
                     <div className='gameboard__playground__maze'>
                         {this.renderMaze()}
                     </div>
                 </div>
-                <div className="gameboard__console">
-                    <div onClick={this.infoToggler} className="toggler">
-                        {this.state.infoIsToggle ? <i className="fas fa-sort-up"></i> :<i className="fas fa-sort-down"></i>}
-                    </div>
-                    <div className={`gameboard__console__info ${this.state.infoIsToggle ? '' : 'hide'}`}>
-                        <div className="modeselector">
-                            <ModeSelector
-                                clicked={this.props.modeClicker}
-                                refresh={this.initGame}
-                                mode={this.props.mode}
-                            />
-                        </div>
-                        <div className="calculator">
-                            <Calculator
-                                count={this.state.graph.answer.count}
-                            />
-                        </div>
-                    </div>
-                    <Controller
-                        renderRunner={this.renderRunner}
-                        size={this.props.mode.size}
-                        currentPosition={this.state.position}
-                        end={this.state.graph.answer.end}
-                    />
-                </div>
+                <GameConsole
+                    mode={this.props.mode}
+                    modeClicker={this.props.modeClicker}
+                    initGame={this.initGame}
+                />
             </div>
         )
     }
 }
 
-export default GameBoard
+const mapStateToProps = (state: StoreState): { maze: Maze } => {
+    return {
+        maze: state.maze
+    }
+}
+
+export default connect(mapStateToProps, { renderRunner, refresh })(GameBoard)

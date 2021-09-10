@@ -4,6 +4,7 @@
     border-radius: 50%;
     background: #F2D648;
     position: relative;
+    z-index: 1500;
     // animation-name: moveright;
     animation-duration: 0.2s;
     // animation-iteration-count: infinite;
@@ -28,8 +29,8 @@
     }
     &__eye {
       position: absolute;
-        width: 1.5px;
-        height: 1.5px;
+        width: 15%;
+        height: 15%;
         border-radius: 50%;
         top: 15%;
         right: 25%;

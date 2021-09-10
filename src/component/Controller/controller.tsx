@@ -1,30 +1,28 @@
-import React from 'react';
-import './controller.scss';
-type SelectorProps = {
-    renderRunner: (size: number, direction: string) => void;
+import { Maze } from '../../store/actions/index';
+import Aux from '../../hoc/auxiliary';
+
+type ControllerProps = {
+    renderRunner: Function;
     size: number;
-    currentPosition: number;
-    end: number;
+    maze: Maze;
 }
 
-function controller(props: SelectorProps): JSX.Element {
-    // console.log('=====')
-    // console.log(props.currentPosition)
-    // console.log(props.end)
-    // console.log('=====')
-    const clicker = (step: number, direction: string):void => {
-        if (props.currentPosition !== props.end) {
-            props.renderRunner(step, direction);
+function controller(props: ControllerProps): JSX.Element {
+    const clicker = (step: number, direction: string): void => {
+        let currentPosition = props.maze.position;
+        let nextPosition = props.maze.graph.adjacentList[currentPosition];
+        if (props.maze.position !== props.maze.graph.answer.end) {
+            props.renderRunner(step, direction, currentPosition, nextPosition,props.maze.step);
         }
     }
 
     return (
-        <div className="controller">
+        <Aux>
             <div onClick={() => clicker(-props.size, 'up')}>&uarr;</div>
             <div onClick={() => clicker(-1, 'left')}>&larr;</div>
             <div onClick={() => clicker(props.size, 'down')} >&darr;</div>
             <div onClick={() => clicker(1, 'right')}>&rarr;</div>
-        </div>
+        </Aux>
     )
 }
 
