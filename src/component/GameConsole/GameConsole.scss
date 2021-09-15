@@ -1,6 +1,8 @@
 .gameboard__console {
-    width: 25rem;
-    height: 25rem;
+    width: 30vw;
+    height: 30vw;
+    min-width: 25rem;
+    min-height: 25rem;
     display: flex;
     flex-direction: column;
 

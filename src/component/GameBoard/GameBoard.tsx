@@ -11,7 +11,7 @@ import { Maze, renderRunner, refresh } from '../../store/actions/index';
 
 interface GameBoardProps {
     mode: { level: string, size: number };
-    modeClicker: (level: string, size: number) => void;
+    changeMode: (level: string, size: number) => void;
     // ========Redux========
     renderRunner: Function;
     refresh: Function;
@@ -26,7 +26,7 @@ class GameBoard extends React.Component<GameBoardProps, {}>{
 
     componentDidUpdate(prevProps: GameBoardProps) {
         if (prevProps.mode.level !== this.props.mode.level) this.initGame();
-        if (this.props.maze.position === this.props.maze.graph.answer.end) {
+        if (this.props.maze.position === this.props.maze.graph.answer.end && prevProps.maze.position !== prevProps.maze.graph.answer.end) {
             document.querySelector('body')?.removeEventListener('keydown', this.keydownListener)
         }
     }
@@ -36,16 +36,16 @@ class GameBoard extends React.Component<GameBoardProps, {}>{
         let nextPosition = this.props.maze.graph.adjacentList[currentPosition];
         switch (e.code) {
             case ('ArrowLeft'):
-                this.props.renderRunner(-1, 'left', currentPosition, nextPosition,this.props.maze.step);
+                this.props.renderRunner(-1, 'left', currentPosition, nextPosition, this.props.maze.step);
                 break
             case ('ArrowRight'):
-                this.props.renderRunner(1, 'right', currentPosition, nextPosition,this.props.maze.step);
+                this.props.renderRunner(1, 'right', currentPosition, nextPosition, this.props.maze.step);
                 break
             case ('ArrowDown'):
-                this.props.renderRunner(this.props.mode.size, 'down', currentPosition, nextPosition,this.props.maze.step);
+                this.props.renderRunner(this.props.mode.size, 'down', currentPosition, nextPosition, this.props.maze.step);
                 break
             case ('ArrowUp'):
-                this.props.renderRunner(-this.props.mode.size, 'up', currentPosition, nextPosition,this.props.maze.step);
+                this.props.renderRunner(-this.props.mode.size, 'up', currentPosition, nextPosition, this.props.maze.step);
                 break
         }
     }
@@ -64,14 +64,14 @@ class GameBoard extends React.Component<GameBoardProps, {}>{
             arr.push(this.renderWall(key, this.props.maze.graph.adjacentList[key]))
         }
         return arr.map((el, index) => {
-            let show =null;
-            if(this.props.maze.showHint){
-                show = this.props.maze.graph.solutionPath.includes(index+1)?true:false
+            let show = null;
+            if (this.props.maze.showHint) {
+                show = this.props.maze.graph.solutionPath.includes(index + 1) ? true : false
             }
             return (
-                <div 
-                key={index + 1}  
-                className={`${this.props.mode.level} ${show?'hint':''} vertex ${el.join(' ')}`}
+                <div
+                    key={index + 1}
+                    className={`${this.props.mode.level} ${show ? 'hint' : ''} vertex ${el.join(' ')}`}
                 >
                     {this.renderPacAndTarget(index + 1)}
                 </div>
@@ -90,13 +90,12 @@ class GameBoard extends React.Component<GameBoardProps, {}>{
         return directions
     }
 
-    initGame = (): void => {
-        this.props.refresh(this.props.mode.size);
+    initGame = (size = this.props.mode.size): void => {
+        this.props.refresh(size);
         document.querySelector('body')?.addEventListener('keydown', this.keydownListener);
     }
 
     render() {
-        // console.log(this.props.maze.showHint)
         return (
             <div className='gameboard'>
                 <div className="gameboard__playground">
@@ -111,7 +110,7 @@ class GameBoard extends React.Component<GameBoardProps, {}>{
                 </div>
                 <GameConsole
                     mode={this.props.mode}
-                    modeClicker={this.props.modeClicker}
+                    changeMode={this.props.changeMode}
                     initGame={this.initGame}
                 />
             </div>

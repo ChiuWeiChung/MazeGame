@@ -8,8 +8,10 @@
     margin: 0.5rem auto;
 
     &__playground {
-        width: 25rem;
-        height: 25rem;
+        width: 30vw;
+        height: 30vw;
+        min-width: 25rem;
+        min-height: 25rem;
         position: relative;
         box-shadow: 0 2rem 4rem #00000030;
 
@@ -86,18 +88,5 @@
                 }
             }
         }
-
-        // &--easy {
-        //     width: 12.5%;
-        //     height: 12.5%;
-        // }
-        // &--normal {
-        //     width: 10%;
-        //     height: 10%;
-        // }
-        // &--hard {
-        //     width: 5%;
-        //     height: 5%;
-        // }
     }
 }

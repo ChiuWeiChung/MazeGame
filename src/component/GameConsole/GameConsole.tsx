@@ -13,8 +13,8 @@ import { infoToggler, renderRunner, hintToggler } from '../../store/actions/inde
 
 interface GameConsoleProps {
     mode: { level: string, size: number };
-    modeClicker: (level: string, size: number) => void;
-    initGame: () => void;
+    changeMode: (level: string, size: number) => void;
+    initGame: (size?:number) => void;
     // ========Redux========
     renderRunner: Function;
     infoToggler: Function;
@@ -33,7 +33,7 @@ class GameConsole extends React.Component<GameConsoleProps, {}> {
                 <div className={`gameboard__console__info ${this.props.maze.infoIsToggle ? '' : 'hide'}`}>
                     <div className="modeselector">
                         <ModeSelector
-                            clicked={this.props.modeClicker}
+                            changeMode={this.props.changeMode}
                             refresh={this.props.initGame}
                             mode={this.props.mode}
                         />

@@ -18,7 +18,7 @@ class App extends React.Component<AppProps, AppState> {
         mode: { level: 'easy', size: 8 }
     }
 
-    setMode = (level: string, size: number): void => {
+    changeMode = (level: string, size: number): void => {
         let changedMode = { ...this.state.mode };
         changedMode.level = level;
         changedMode.size = size;
@@ -31,7 +31,7 @@ class App extends React.Component<AppProps, AppState> {
             <div>
                 <div className="Container">
                     <h1 className="title">Maze Runner</h1>
-                    <GameBoard mode={this.state.mode} modeClicker={this.setMode} />
+                    <GameBoard mode={this.state.mode} changeMode={this.changeMode} />
                     <Footer />
 
                 </div>

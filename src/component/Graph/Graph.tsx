@@ -32,9 +32,9 @@ class Graph {
     }
   }
 
+  //圖遍歷 method
   depthFirstRecursive(start: number) {
     let visitedObj: { [key: number]: boolean } = {};
-    let path: number[] = [];
     let finalPath: number[] = [];
     let max = -Infinity;
     let finalVertex: number | undefined;
@@ -50,54 +50,29 @@ class Graph {
         if (!visitedObj[el]) return dfs(el, count + 1, newPath)
       })
     }
-    dfs(start, 0, path);
+    dfs(start, 0, []);
 
     if (finalVertex) {
       this.answer = { end: finalVertex, count: max - 1, }
       this.solutionPath = finalPath
     }
-
-
   }
-  // depthFirstRecursive(start: number) {
-  //   let visitedObj: { [key: number]: boolean } = {};
-  //   let path: number[] = [];
-  //   let finalPath :number[]=[];
-  //   let max = -Infinity;
-  //   let finalVertex:number|undefined ;
-  //   const dfs = (vertex: number,count:number) => {
-  //     visitedObj[vertex] = true;
-
-  //     path.push(vertex);
-  //     if(count+1>max) {
-  //       max = count+1;
-  //       finalVertex = vertex;
-  //     }
-  //     this.adjacentList[vertex].forEach(el => {
-  //       if (!visitedObj[el]) return dfs(el,count+1)
-  //     })
-  //   }
-  //   dfs(start,0);
-
-  //   if(finalVertex){
-  //     this.answer = {start:0,end:finalVertex,count:max-1}
-  //   }
-
-  // }
 
   createPath(key: number): void {
     const path = [key];
     let keepgoing = true;
     while (keepgoing) {
       let currentVertex = path[path.length - 1];
+      // 若目前位置尚未被拜訪過
       if (!this.visited.includes(currentVertex)) {
-        // 若最後走到的位置尚未被拜訪過
+        // 回傳下一個隨機路徑
         let nextVertex = this.returnVertex(currentVertex, path);
+        // 若下一個隨機路徑尚未被拜訪
         if (nextVertex !== 0) {
           path.push(nextVertex);
           this.addEdge(currentVertex, nextVertex);
         } else {
-          // 若最後走到的位置是死路，則須將起始點與左側位置連接
+          // 若下一個隨機路徑已被拜訪，則將起始點與左側位置連接
           if (path[0] % this.size !== 1) {
             if (path[0] !== 1) {
               this.addEdge(path[0], path[0] - 1)
@@ -108,37 +83,24 @@ class Graph {
           keepgoing = false;
         }
       } else {
-        // 若最後走到的位置已被拜訪過
+        // 若目前位置已被拜訪
         keepgoing = false;
       }
     }
     this.visited = [...this.visited, ...path];
   }
 
-  returnVertex(vertex: number, arr: number[]): number {
+  returnVertex(vertex: number, path: number[]): number {
+    //  確認目前位置所擁有的鄰居們
     const neighborArr = this.findNeighbor(vertex)
-    //  Define the possible direction Array
-    const allDirection = neighborArr.filter((el: number | null): boolean => {
-      return el !== 0
-    });
-    const newDirection = allDirection.filter((el) => {
-      return !arr.includes(el);
-    });
-    // If Dead Road => return false
+    const allDirection = neighborArr.filter((el: number | null): boolean => el !== 0);
+    //  篩選出未被拜訪的鄰居們
+    const newDirection = allDirection.filter((el) => !path.includes(el));
+    // 若目前位置的所有鄰居都被拜訪過，則回傳0
     if (newDirection.length === 0) return 0;
-    // If Live Road => return random vertex
+    // 若仍有鄰居尚未被拜訪，則隨機回傳一個鄰居
     const nextVertex = newDirection[Math.floor(Math.random() * newDirection.length)];
     return nextVertex;
-  }
-
-  createMaze(): void {
-    for (let key in this.adjacentList) {
-      while (this.adjacentList[key].length === 0) {
-        this.createPath(parseInt(key));
-      }
-    }
-
-    this.depthFirstRecursive(1)
   }
 
   findNeighbor(v: number): any[] {
@@ -148,6 +110,16 @@ class Graph {
     let right = v % this.size === 0 ? 0 : v + 1;
     return [top, right, left, bottom]
   }
+
+  createMaze(): void {
+    for (let key in this.adjacentList) {
+      while (this.adjacentList[key].length === 0) {
+        this.createPath(parseInt(key));
+      }
+    }
+    this.depthFirstRecursive(1)
+  }
+
 }
 
 
