@@ -1,70 +1,13 @@
-# Getting Started with Create React App
+# 隨機迷宮遊戲
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## [點擊進入迷宮遊戲](https://chiuweichung.github.io/MazeGame/)
 
-## Available Scripts
+* 使用 TypeScript 結合 React & Redux 建立 SPA
+* 使用 Scss 預處理器進行版面佈局
+* 建立 **圖 (Graph)** 之資料結構以產生隨機迷宮
 
-In the project directory, you can run:
+![maze-game](https://github.com/ChiuWeiChung/IMGTANK/blob/main/portfolio/maze-game/maze-game.gif?raw=true)
 
-### `npm start`
+這個小遊戲主要是用來練習 TypeScript 在 React 上的運用，雖然過程中需要不厭其煩的引用 Interface、Types，但好處就是執行時出現的報錯減少了。另外也用來練習 Scss，以增加對該處理器的熟悉程度。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+另外在產生隨機迷宮的部分，由於之前學習過 [Graph 資料結構](https://github.com/ChiuWeiChung/notes-markdown/blob/main/data%20structure%26algorithm/data-structure/graph/note.markdown)，該結構可以用來建立不同位置之間的關係，並進行兩點路徑的計算，因此想說拿來建立迷宮可能是其中一種方法。
